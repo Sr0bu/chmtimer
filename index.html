@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Automatischer Timer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div id="timer">--:--:--</div>
+    <div id="next-time"></div>
+  </div>
+
+  <script>
+    const targets = [
+      { hour: 9, minute: 30 },
+      { hour: 11, minute: 20 },
+      { hour: 13, minute: 10 },
+      { hour: 15, minute: 40 },
+    ];
+
+    function getNextTargetTime(now) {
+      for (const t of targets) {
+        const target = new Date(now);
+        target.setHours(t.hour, t.minute, 0, 0);
+        if (target > now) return target;
+      }
+      // Wenn alle Zeiten heute vorbei sind, nächste Zeit ist 9:30 morgen
+      const tomorrowTarget = new Date(now);
+      tomorrowTarget.setDate(tomorrowTarget.getDate() + 1);
+      tomorrowTarget.setHours(targets[0].hour, targets[0].minute, 0, 0);
+      return tomorrowTarget;
+    }
+
+    function updateTimer() {
+      const now = new Date();
+      const target = getNextTargetTime(now);
+
+      const diff = target - now;
+      if (diff <= 0) {
+        document.getElementById('timer').textContent = "00:00:00";
+        return;
+      }
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById('timer').textContent =
+        `${String(hours).padStart(2, '0')}:` +
+        `${String(minutes).padStart(2, '0')}:` +
+        `${String(seconds).padStart(2, '0')}`;
+
+      document.getElementById('next-time').textContent = `${String(target.getHours()).padStart(2, '0')}:${String(target.getMinutes()).padStart(2, '0')}`;
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+  </script>
+</body>
+</html>
