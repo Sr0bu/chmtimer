@@ -14,21 +14,36 @@
   </div>
 
   <script>
-    const targets = [
+    const targets1 = [
       { hour: 9, minute: 30 },
       { hour: 11, minute: 20 },
       { hour: 13, minute: 10 },
       { hour: 14, minute: 10 },
       { hour: 15, minute: 40 },
     ];
+    const targets2 = [
+      { hour: 8, minute: 45 },
+      { hour: 9, minute: 30 },
+      { hour: 11, minute: 20 },
+      { hour: 12, minute: 25 },
+      { hour: 13, minute: 10 },
+      { hour: 14, minute: 10 },
+      { hour: 14, minute: 55 },
+      { hour: 15, minute: 40 },
+    ];
+    let useTargets2 = false;
+    function getCurrentTargets() {
+      return useTargets2 ? targets2 : targets1;
+    }
 
     function getNextTargetTime(now) {
+      const targets = getCurrentTargets();
       for (const t of targets) {
         const target = new Date(now);
         target.setHours(t.hour, t.minute, 0, 0);
         if (target > now) return target;
       }
-      // Wenn alle Zeiten heute vorbei sind, nächste Zeit ist 9:30 morgen
+      // Wenn alle Zeiten heute vorbei sind, nächste Zeit ist die erste Zeit morgen
       const tomorrowTarget = new Date(now);
       tomorrowTarget.setDate(tomorrowTarget.getDate() + 1);
       tomorrowTarget.setHours(targets[0].hour, targets[0].minute, 0, 0);
@@ -56,6 +71,12 @@
 
       document.getElementById('next-time').textContent = `${String(target.getHours()).padStart(2, '0')}:${String(target.getMinutes()).padStart(2, '0')}`;
     }
+
+    // Klick-Handler zum Wechseln der Zeitlisten
+    document.body.addEventListener('click', () => {
+      useTargets2 = !useTargets2;
+      updateTimer();
+    });
 
     setInterval(updateTimer, 1000);
     updateTimer();
