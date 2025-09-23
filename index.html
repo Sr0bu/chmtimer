@@ -24,6 +24,7 @@
     const targets2 = [
       { hour: 8, minute: 45 },
       { hour: 9, minute: 30 },
+      { hour: 10, minute: 35 },
       { hour: 11, minute: 20 },
       { hour: 12, minute: 25 },
       { hour: 13, minute: 10 },
@@ -72,7 +73,7 @@
       document.getElementById('next-time').textContent = `${String(target.getHours()).padStart(2, '0')}:${String(target.getMinutes()).padStart(2, '0')}`;
     }
 
-    // Klick-Handler zum Wechseln der Zeitlisten
+    // Klick-Handler
     document.body.addEventListener('click', () => {
       useTargets2 = !useTargets2;
       updateTimer();
